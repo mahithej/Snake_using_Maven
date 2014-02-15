@@ -18,7 +18,7 @@ public class BoardTest extends Board {
         y[0]=50;
 
         boardObj.checkApple(70,70);
-        assertTrue(isNeedSearchAppleZone);
+        assertTrue(isNeedSearchAppleZone);             //9
 
     }
 
