@@ -16,10 +16,8 @@ import java.awt.event.KeyEvent;
 
 
 /**
- *
  * {@value } goos.
- *
- * */
+ */
 public class Board extends JPanel implements ActionListener {
     private int windowSize = 600;
     private int DOTS_SIZE = 10;
@@ -55,6 +53,9 @@ public class Board extends JPanel implements ActionListener {
 
     }
 
+    /**
+     * The start method. Initializing Timer and snake.
+     */
     final void start() {
 
         for (int z = 0; z < DOTS; z++) {
@@ -65,6 +66,11 @@ public class Board extends JPanel implements ActionListener {
         timer.start();
     }
 
+    /**
+     * Method for 2 apples drawing.
+     *
+     * @param g
+     */
     public void drawApple(Graphics g) {
         if (neednewAppleFirst) {
             appley = DOTS_SIZE * ((int) (Math.random() * limitVariable));
@@ -81,6 +87,11 @@ public class Board extends JPanel implements ActionListener {
         g.drawImage(appleImg, applexx, appleyy, this);
     }
 
+    /**
+     * Painting method
+     *
+     * @param g
+     */
     public void paint(Graphics g) {
         super.paint(g);
         for (int z = 0; z < DOTS; z++) {
@@ -89,29 +100,34 @@ public class Board extends JPanel implements ActionListener {
         drawApple(g);
     }
 
+    /**
+     * Checking for escaping apple. If snake is around apple, need to escaping apple.
+     *
+     * @param xx X coordinates for apple.
+     * @param yy Y coordinates for apple.
+     */
     public void checkApple(int xx, int yy) {
 
         int testapplex = xx;
         int testappley = yy;
 
         if (isNeedSearchAppleZone) {
-            if (((x[0] + 20 == testapplex) & (y[0] + 10 == testappley)) |
-                    ((x[0] + 20 == testapplex) & (y[0] + 20 == testappley)) |
-                    ((x[0] + 20 == testapplex) & (y[0] == testappley)) |
-                    ((x[0] + 20 == testapplex) & (y[0] - 10 == testappley)) |
-                    ((x[0] + 20 == testapplex) & (y[0] - 20 == testappley)) |
-                    ((x[0] + 10 == testapplex) & (y[0] + 20 == testappley)) |
-                    ((x[0] + 10 == testapplex) & (y[0] - 20 == testappley)) |
-                    ((x[0] == testapplex) & (y[0] + 20 == testappley)) |
-                    ((x[0] == testapplex) & (y[0] - 20 == testappley)) |
-                    ((x[0] - 10 == testapplex) & (y[0] + 20 == testappley)) |
-                    ((x[0] - 10 == testapplex) & (y[0] - 20 == testappley)) |
-                    ((x[0] - 20 == testapplex) & (y[0] + 20 == testappley)) |
-                    ((x[0] - 20 == testapplex) & (y[0] + 10 == testappley)) |
-                    ((x[0] - 20 == testapplex) & (y[0] == testappley)) |
-                    ((x[0] - 20 == testapplex) & (y[0] - 10 == testappley)) |
-                    ((x[0] - 20 == testapplex) & (y[0] - 20 == testappley))
-
+            if (((x[0] + 20 == testapplex) & (y[0] + 10 == testappley))
+                    | ((x[0] + 20 == testapplex) & (y[0] + 20 == testappley))
+                    | ((x[0] + 20 == testapplex) & (y[0] == testappley))
+                    | ((x[0] + 20 == testapplex) & (y[0] - 10 == testappley))
+                    | ((x[0] + 20 == testapplex) & (y[0] - 20 == testappley))
+                    | ((x[0] + 10 == testapplex) & (y[0] + 20 == testappley))
+                    | ((x[0] + 10 == testapplex) & (y[0] - 20 == testappley))
+                    | ((x[0] == testapplex) & (y[0] + 20 == testappley))
+                    | ((x[0] == testapplex) & (y[0] - 20 == testappley))
+                    | ((x[0] - 10 == testapplex) & (y[0] + 20 == testappley))
+                    | ((x[0] - 10 == testapplex) & (y[0] - 20 == testappley))
+                    | ((x[0] - 20 == testapplex) & (y[0] + 20 == testappley))
+                    | ((x[0] - 20 == testapplex) & (y[0] + 10 == testappley))
+                    | ((x[0] - 20 == testapplex) & (y[0] == testappley))
+                    | ((x[0] - 20 == testapplex) & (y[0] - 10 == testappley))
+                    | ((x[0] - 20 == testapplex) & (y[0] - 20 == testappley))
                     ) {
                 isNeedSearchAppleZone = false;
 
@@ -187,6 +203,9 @@ public class Board extends JPanel implements ActionListener {
 
     }
 
+    /**
+     *
+     */
     void move() {
         if (((x[0] == -10 || x[0] == windowSize) || (y[0] == -10 || y[0] == windowSize))) {
             setBackground(Color.black);
@@ -215,6 +234,9 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * @param e
+     */
     public void actionPerformed(ActionEvent e) {
         move();
         checkApple();
@@ -225,10 +247,13 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
+
     private class TAdapter extends KeyAdapter {
-
+        /**
+         * @param e
+         */
         public void keyPressed(KeyEvent e) {
-
+            e = e;
             if ((e.getKeyCode() == KeyEvent.VK_LEFT) && (!right)) {
                 left = true;
                 up = false;
