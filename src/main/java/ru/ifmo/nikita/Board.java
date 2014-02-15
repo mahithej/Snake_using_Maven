@@ -25,9 +25,9 @@ public class Board extends JPanel implements ActionListener {
     private int DOTS = 3;
     private boolean neednewAppleFirst = true;
     private boolean neednewAppleSecond = true;
-    public boolean isNeedSearchAppleZone = true;
-    int[] x = new int[windowSize];
-    int[] y = new int[windowSize];
+    protected boolean isNeedSearchAppleZone = true;
+    protected int[] x = new int[windowSize];
+    protected int[] y = new int[windowSize];
     private int applex;
     private int appley;
     private int applexx;
@@ -72,6 +72,7 @@ public class Board extends JPanel implements ActionListener {
 
     /**
      * Method for 2 apples drawing.
+     *
      * @param g Grahpics obj.
      */
     public void drawApple(Graphics g) {
@@ -92,6 +93,7 @@ public class Board extends JPanel implements ActionListener {
 
     /**
      * Painting method.
+     *
      * @param g graphics object.
      */
     public void paint(Graphics g) {
