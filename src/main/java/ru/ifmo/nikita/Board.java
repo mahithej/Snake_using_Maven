@@ -16,6 +16,7 @@ import java.awt.event.KeyEvent;
 
 
 /**
+ * I've no idea why CheckStyle indicates javadoc error on values description.
  * {@value } goos.
  */
 public class Board extends JPanel implements ActionListener {
@@ -41,6 +42,9 @@ public class Board extends JPanel implements ActionListener {
     private int delay = 150;
     private int limitVariable = 40;
 
+    /**
+     * Constructor, running only once, at the beginning.
+     */
     public Board() {
         addKeyListener(new TAdapter());
         ImageIcon iid = new ImageIcon(this.getClass().getResource("/dot.png"));
@@ -68,8 +72,7 @@ public class Board extends JPanel implements ActionListener {
 
     /**
      * Method for 2 apples drawing.
-     *
-     * @param g
+     * @param g Grahpics obj.
      */
     public void drawApple(Graphics g) {
         if (neednewAppleFirst) {
@@ -88,9 +91,8 @@ public class Board extends JPanel implements ActionListener {
     }
 
     /**
-     * Painting method
-     *
-     * @param g
+     * Painting method.
+     * @param g graphics object.
      */
     public void paint(Graphics g) {
         super.paint(g);
@@ -126,13 +128,14 @@ public class Board extends JPanel implements ActionListener {
                     | ((x[0] - 20 == xx) & (y[0] - 20 == yy))
                     ) {
                 isNeedSearchAppleZone = false;
-
                 appleEscaping();
             }
         }
     }
 
-
+    /**
+     * Checking ate apple. If ate, create new, using the flag.
+     */
     void checkApple() {
         checkApple(applex, appley);
         checkApple(applexx, appleyy);
@@ -149,6 +152,9 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Escaping apple if snake nearby.
+     */
     public void appleEscaping() {
         position = ((int) (Math.random() * 9));
         switch (position) {
@@ -200,7 +206,7 @@ public class Board extends JPanel implements ActionListener {
     }
 
     /**
-     *
+     * Moving the snake in order of pressed button.
      */
     void move() {
         if (((x[0] == -10 || x[0] == windowSize) || (y[0] == -10 || y[0] == windowSize))) {
@@ -231,7 +237,9 @@ public class Board extends JPanel implements ActionListener {
     }
 
     /**
-     * @param e
+     * Listener method for buttons.
+     *
+     * @param e object for event
      */
     public void actionPerformed(ActionEvent e) {
         move();
@@ -243,10 +251,11 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
-
     private class TAdapter extends KeyAdapter {
         /**
-         * @param e
+         * Getting the Key event.
+         *
+         * @param e event object.
          */
         public void keyPressed(KeyEvent e) {
             e = e;
