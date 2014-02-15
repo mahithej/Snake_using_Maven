@@ -107,27 +107,23 @@ public class Board extends JPanel implements ActionListener {
      * @param yy Y coordinates for apple.
      */
     public void checkApple(int xx, int yy) {
-
-        int testapplex = xx;
-        int testappley = yy;
-
         if (isNeedSearchAppleZone) {
-            if (((x[0] + 20 == testapplex) & (y[0] + 10 == testappley))
-                    | ((x[0] + 20 == testapplex) & (y[0] + 20 == testappley))
-                    | ((x[0] + 20 == testapplex) & (y[0] == testappley))
-                    | ((x[0] + 20 == testapplex) & (y[0] - 10 == testappley))
-                    | ((x[0] + 20 == testapplex) & (y[0] - 20 == testappley))
-                    | ((x[0] + 10 == testapplex) & (y[0] + 20 == testappley))
-                    | ((x[0] + 10 == testapplex) & (y[0] - 20 == testappley))
-                    | ((x[0] == testapplex) & (y[0] + 20 == testappley))
-                    | ((x[0] == testapplex) & (y[0] - 20 == testappley))
-                    | ((x[0] - 10 == testapplex) & (y[0] + 20 == testappley))
-                    | ((x[0] - 10 == testapplex) & (y[0] - 20 == testappley))
-                    | ((x[0] - 20 == testapplex) & (y[0] + 20 == testappley))
-                    | ((x[0] - 20 == testapplex) & (y[0] + 10 == testappley))
-                    | ((x[0] - 20 == testapplex) & (y[0] == testappley))
-                    | ((x[0] - 20 == testapplex) & (y[0] - 10 == testappley))
-                    | ((x[0] - 20 == testapplex) & (y[0] - 20 == testappley))
+            if (((x[0] + 20 == xx) & (y[0] + 10 == yy))
+                    | ((x[0] + 20 == xx) & (y[0] + 20 == yy))
+                    | ((x[0] + 20 == xx) & (y[0] == yy))
+                    | ((x[0] + 20 == xx) & (y[0] - 10 == yy))
+                    | ((x[0] + 20 == xx) & (y[0] - 20 == yy))
+                    | ((x[0] + 10 == xx) & (y[0] + 20 == yy))
+                    | ((x[0] + 10 == xx) & (y[0] - 20 == yy))
+                    | ((x[0] == xx) & (y[0] + 20 == yy))
+                    | ((x[0] == xx) & (y[0] - 20 == yy))
+                    | ((x[0] - 10 == xx) & (y[0] + 20 == yy))
+                    | ((x[0] - 10 == xx) & (y[0] - 20 == yy))
+                    | ((x[0] - 20 == xx) & (y[0] + 20 == yy))
+                    | ((x[0] - 20 == xx) & (y[0] + 10 == yy))
+                    | ((x[0] - 20 == xx) & (y[0] == yy))
+                    | ((x[0] - 20 == xx) & (y[0] - 10 == yy))
+                    | ((x[0] - 20 == xx) & (y[0] - 20 == yy))
                     ) {
                 isNeedSearchAppleZone = false;
 
