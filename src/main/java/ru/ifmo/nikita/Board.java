@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 
 /**
@@ -20,7 +21,7 @@ import java.awt.event.KeyEvent;
  * {@value } goos.
  */
 public class Board extends JPanel implements ActionListener {
-    private int windowSize = 600;
+    private int windowSize = 500;
     private int DOTS_SIZE = 10;
     private int DOTS = 3;
     private boolean neednewAppleFirst = true;
@@ -37,11 +38,8 @@ public class Board extends JPanel implements ActionListener {
     private boolean up = false;
     private boolean down = false;
     private Image body, appleImg;
-    private int position;
-    private int startPosOfSnake = 50;
-    private int delay = 150;
-    private int limitVariable = 50;
-
+    private ArrayList<Integer> listOfCoordX = new ArrayList<Integer>();
+    private ArrayList<Integer> listOfCoordY = new ArrayList<Integer>();
     /**
      * Constructor, running only once, at the beginning.
      */
@@ -54,7 +52,6 @@ public class Board extends JPanel implements ActionListener {
         start();
         setFocusable(true);
         setBackground(Color.BLACK);
-
     }
 
     /**
@@ -63,9 +60,14 @@ public class Board extends JPanel implements ActionListener {
     final void start() {
 
         for (int z = 0; z < DOTS; z++) {
+            int startPosOfSnake = 50;
             x[z] = startPosOfSnake - z * DOTS_SIZE;
             y[z] = startPosOfSnake;
+            if (z!=0){
+            listOfCoordX.add(x[z]);
+            listOfCoordY.add(y[z]);}
         }
+        int delay = 150;
         Timer timer = new Timer(delay, this);
         timer.start();
     }
@@ -77,6 +79,7 @@ public class Board extends JPanel implements ActionListener {
      */
     public void drawApple(Graphics g) {
         if (neednewAppleFirst) {
+            int limitVariable = 50;
             appley = DOTS_SIZE * ((int) (Math.random() * limitVariable));
             applex = DOTS_SIZE * ((int) (Math.random() * limitVariable));
             neednewAppleFirst = false;
@@ -84,6 +87,7 @@ public class Board extends JPanel implements ActionListener {
         g.drawImage(appleImg, applex, appley, this);
 
         if (neednewAppleSecond) {
+            int limitVariable = 50;
             applexx = DOTS_SIZE * ((int) (Math.random() * limitVariable));
             appleyy = DOTS_SIZE * ((int) (Math.random() * limitVariable));
             neednewAppleSecond = false;
@@ -158,8 +162,9 @@ public class Board extends JPanel implements ActionListener {
     /**
      * Escaping apple if snake nearby.
      */
+
     public void appleEscaping() {
-        position = ((int) (Math.random() * 9));
+        int position = ((int) (Math.random() * 9));
         switch (position) {
             case 0:
                 repaint();
@@ -212,10 +217,12 @@ public class Board extends JPanel implements ActionListener {
      * Moving the snake in order of pressed button.
      */
     void move() {
-        if (x[0] == 0 || x[0] == windowSize-10 || y[0] == 0 || y[0] == windowSize-10) {
-            setBackground(Color.black);
+        if (x[0] == -10 | x[0] == windowSize | y[0] == -10 | y[0] == windowSize) {
             JOptionPane.showMessageDialog(null, "Meeting with the wall");
             System.exit(0);
+        }
+        if (listOfCoordX.contains(x[0])& listOfCoordY.contains(y[0])){
+            JOptionPane.showMessageDialog(null, "Selfmeeting");
         }
         for (int z = DOTS; z > 0; z--) {
             x[z] = x[(z - 1)];
@@ -226,6 +233,7 @@ public class Board extends JPanel implements ActionListener {
         }
         if (right) {
             x[0] += DOTS_SIZE;
+
         }
         if (up) {
             y[0] -= DOTS_SIZE;
