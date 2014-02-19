@@ -212,7 +212,7 @@ public class Board extends JPanel implements ActionListener {
      * Moving the snake in order of pressed button.
      */
     void move() {
-        if (((x[0] == -10 || x[0] == windowSize) || (y[0] == -10 || y[0] == windowSize))) {
+        if (x[0] == 0 || x[0] == windowSize-10 || y[0] == 0 || y[0] == windowSize-10) {
             setBackground(Color.black);
             JOptionPane.showMessageDialog(null, "Meeting with the wall");
             System.exit(0);
@@ -222,20 +222,16 @@ public class Board extends JPanel implements ActionListener {
             y[z] = y[(z - 1)];
         }
         if (left) {
-            int size = DOTS_SIZE;
-            x[0] -= size;
+            x[0] -= DOTS_SIZE;
         }
         if (right) {
-            int size = DOTS_SIZE;
-            x[0] += size;
+            x[0] += DOTS_SIZE;
         }
         if (up) {
-            int size = DOTS_SIZE;
-            y[0] -= size;
+            y[0] -= DOTS_SIZE;
         }
         if (down) {
-            int size = DOTS_SIZE;
-            y[0] += size;
+            y[0] += DOTS_SIZE;
         }
     }
 
