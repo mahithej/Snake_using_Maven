@@ -40,7 +40,7 @@ public class Board extends JPanel implements ActionListener {
     private int position;
     private int startPosOfSnake = 50;
     private int delay = 150;
-    private int limitVariable = 40;
+    private int limitVariable = 60;
 
     /**
      * Constructor, running only once, at the beginning.
@@ -260,7 +260,6 @@ public class Board extends JPanel implements ActionListener {
          * @param e event object.
          */
         public void keyPressed(KeyEvent e) {
-            e = e;
             if ((e.getKeyCode() == KeyEvent.VK_LEFT) && (!right)) {
                 left = true;
                 up = false;
