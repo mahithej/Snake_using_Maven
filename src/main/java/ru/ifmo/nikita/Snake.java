@@ -7,10 +7,11 @@ import javax.swing.JFrame;
  * Window creating
  */
 public class Snake extends JFrame {
+    private int windowSize = 500;
     public Snake() {
         add(new Board());
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setSize(500, 500);
+        setSize(windowSize, windowSize);
         setLocationRelativeTo(null);
         setTitle("Snake");
         setResizable(false);
