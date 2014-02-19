@@ -40,7 +40,7 @@ public class Board extends JPanel implements ActionListener {
     private int position;
     private int startPosOfSnake = 50;
     private int delay = 150;
-    private int limitVariable = 60;
+    private int limitVariable = 50;
 
     /**
      * Constructor, running only once, at the beginning.
@@ -106,6 +106,7 @@ public class Board extends JPanel implements ActionListener {
 
     /**
      * Checking for escaping apple. If snake is around apple, need to escaping apple.
+     * values 10 and 20 - is coordinates for neighbor dots.
      *
      * @param xx X coordinates for apple.
      * @param yy Y coordinates for apple.
