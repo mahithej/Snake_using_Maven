@@ -40,7 +40,7 @@ public class Board extends JPanel implements ActionListener {
     private Image body, appleImg;
     private ArrayList<Integer> listOfCoordX = new ArrayList<Integer>();
     private ArrayList<Integer> listOfCoordY = new ArrayList<Integer>();
-
+    JPanel button=new JPanel();
     /**
      * Constructor, running only once, at the beginning.
      */
@@ -82,16 +82,16 @@ public class Board extends JPanel implements ActionListener {
     public void drawApple(Graphics g) {
         if (needNewAppleSecond) {
             int limitVariable = 50;
-            appleOneCoordY = dotsSize * ((int) (Math.random() * limitVariable));
-            appleOneCoordX = dotsSize * ((int) (Math.random() * limitVariable));
+            appleTwoCoordY = dotsSize * ((int) (Math.random() * limitVariable));
+            appleTwoCoordX = dotsSize * ((int) (Math.random() * limitVariable));
             needNewAppleSecond = false;
         }
         g.drawImage(appleImg, appleOneCoordX, appleOneCoordY, this);
 
         if (needNewAppleFirst) {
             int limitVariable = 50;
-            appleTwoCoordX = dotsSize * ((int) (Math.random() * limitVariable));
-            appleTwoCoordY = dotsSize * ((int) (Math.random() * limitVariable));
+            appleOneCoordX = dotsSize * ((int) (Math.random() * limitVariable));
+            appleOneCoordY = dotsSize * ((int) (Math.random() * limitVariable));
             needNewAppleFirst = false;
         }
         g.drawImage(appleImg, appleTwoCoordX, appleTwoCoordY, this);
@@ -260,6 +260,7 @@ public class Board extends JPanel implements ActionListener {
         if (!isNeedSearchAppleZone) {
             appleEscaping();
             checkApple();
+
         }
     }
 
