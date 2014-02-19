@@ -22,8 +22,8 @@ import java.util.ArrayList;
  */
 public class Board extends JPanel implements ActionListener {
     private int windowSize = 500;
-    private int DOTS_SIZE = 10;
-    private int DOTS = 3;
+    private int dotsSize = 10;
+    private int dots = 3;
     private boolean needNewAppleFirst = true;
     private boolean needNewAppleSecond = true;
     protected boolean isNeedSearchAppleZone = true;
@@ -40,15 +40,16 @@ public class Board extends JPanel implements ActionListener {
     private Image body, appleImg;
     private ArrayList<Integer> listOfCoordX = new ArrayList<Integer>();
     private ArrayList<Integer> listOfCoordY = new ArrayList<Integer>();
+
     /**
      * Constructor, running only once, at the beginning.
      */
     public Board() {
-        addKeyListener(new TAdapter());
-        ImageIcon iid = new ImageIcon(this.getClass().getResource("/dot.png"));
-        body = iid.getImage();
-        ImageIcon iidd = new ImageIcon(this.getClass().getResource("/apple.png"));
-        appleImg = iidd.getImage();
+        addKeyListener(new ActionListener());
+        ImageIcon _dot = new ImageIcon(this.getClass().getResource("/dot.png"));
+        body = _dot.getImage();
+        ImageIcon _apple = new ImageIcon(this.getClass().getResource("/apple.png"));
+        appleImg = _apple.getImage();
         start();
         setFocusable(true);
         setBackground(Color.BLACK);
@@ -57,15 +58,16 @@ public class Board extends JPanel implements ActionListener {
     /**
      * The start method. Initializing Timer and snake.
      */
-    final void start() {
+    private void start() {
 
-        for (int z = 0; z < DOTS; z++) {
+        for (int z = 0; z < dots; z++) {
             int startPosOfSnake = 50;
-            x[z] = startPosOfSnake - z * DOTS_SIZE;
+            x[z] = startPosOfSnake - z * dotsSize;
             y[z] = startPosOfSnake;
-            if (z!=0){
-            listOfCoordX.add(x[z]);
-            listOfCoordY.add(y[z]);}
+            if (z != 0) {
+                listOfCoordX.add(x[z]);
+                listOfCoordY.add(y[z]);
+            }
         }
         int delay = 150;
         Timer timer = new Timer(delay, this);
@@ -80,16 +82,16 @@ public class Board extends JPanel implements ActionListener {
     public void drawApple(Graphics g) {
         if (needNewAppleSecond) {
             int limitVariable = 50;
-            appleOneCoordY = DOTS_SIZE * ((int) (Math.random() * limitVariable));
-            appleOneCoordX = DOTS_SIZE * ((int) (Math.random() * limitVariable));
+            appleOneCoordY = dotsSize * ((int) (Math.random() * limitVariable));
+            appleOneCoordX = dotsSize * ((int) (Math.random() * limitVariable));
             needNewAppleSecond = false;
         }
         g.drawImage(appleImg, appleOneCoordX, appleOneCoordY, this);
 
         if (needNewAppleFirst) {
             int limitVariable = 50;
-            appleTwoCoordX = DOTS_SIZE * ((int) (Math.random() * limitVariable));
-            appleTwoCoordY = DOTS_SIZE * ((int) (Math.random() * limitVariable));
+            appleTwoCoordX = dotsSize * ((int) (Math.random() * limitVariable));
+            appleTwoCoordY = dotsSize * ((int) (Math.random() * limitVariable));
             needNewAppleFirst = false;
         }
         g.drawImage(appleImg, appleTwoCoordX, appleTwoCoordY, this);
@@ -102,7 +104,7 @@ public class Board extends JPanel implements ActionListener {
      */
     public void paint(Graphics g) {
         super.paint(g);
-        for (int z = 0; z < DOTS; z++) {
+        for (int z = 0; z < dots; z++) {
             g.drawImage(body, x[z], y[z], this);
         }
         drawApple(g);
@@ -143,17 +145,17 @@ public class Board extends JPanel implements ActionListener {
     /**
      * Checking ate apple. If ate, create new, using the flag.
      */
-    void checkApple() {
+    private void checkApple() {
         checkApple(appleOneCoordX, appleOneCoordY);
         checkApple(appleTwoCoordX, appleTwoCoordY);
 
         if ((x[0] == appleOneCoordX) & (y[0] == appleOneCoordY)) {
-            DOTS++;
+            dots++;
             needNewAppleFirst = true;
             isNeedSearchAppleZone = true;
         }
         if ((x[0] == appleTwoCoordX) & (y[0] == appleTwoCoordY)) {
-            DOTS++;
+            dots++;
             needNewAppleSecond = true;
             isNeedSearchAppleZone = true;
         }
@@ -209,6 +211,9 @@ public class Board extends JPanel implements ActionListener {
                 appleOneCoordY -= 10;
                 repaint();
                 break;
+            default:
+                JOptionPane.showMessageDialog(null, "Unbelievable, but exception occured.");
+                System.exit(0);
         }
 
     }
@@ -217,29 +222,29 @@ public class Board extends JPanel implements ActionListener {
      * Moving the snake in order of pressed button.
      */
     void move() {
-        if (x[0] == -10 | x[0] == windowSize-30 | y[0] == -10 | y[0] == windowSize-30) {
+        if (x[0] == -10 | x[0] == windowSize - 30 | y[0] == -10 | y[0] == windowSize) {
             JOptionPane.showMessageDialog(null, "Meeting with the wall");
             System.exit(0);
         }
-        if (listOfCoordX.contains(x[0])& listOfCoordY.contains(y[0])){
+        if (listOfCoordX.contains(x[0]) & listOfCoordY.contains(y[0])) {
             JOptionPane.showMessageDialog(null, "Selfmeeting");
         }
-        for (int z = DOTS; z > 0; z--) {
+        for (int z = dots; z > 0; z--) {
             x[z] = x[(z - 1)];
             y[z] = y[(z - 1)];
         }
         if (left) {
-            x[0] -= DOTS_SIZE;
+            x[0] -= dotsSize;
         }
         if (right) {
-            x[0] += DOTS_SIZE;
+            x[0] += dotsSize;
 
         }
         if (up) {
-            y[0] -= DOTS_SIZE;
+            y[0] -= dotsSize;
         }
         if (down) {
-            y[0] += DOTS_SIZE;
+            y[0] += dotsSize;
         }
     }
 
@@ -258,7 +263,7 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
-    private class TAdapter extends KeyAdapter {
+    private class ActionListener extends KeyAdapter {
         /**
          * Getting the Key event.
          *
