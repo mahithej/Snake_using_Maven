@@ -24,15 +24,15 @@ public class Board extends JPanel implements ActionListener {
     private int windowSize = 500;
     private int DOTS_SIZE = 10;
     private int DOTS = 3;
-    private boolean neednewAppleFirst = true;
-    private boolean neednewAppleSecond = true;
+    private boolean needNewAppleFirst = true;
+    private boolean needNewAppleSecond = true;
     protected boolean isNeedSearchAppleZone = true;
     protected int[] x = new int[windowSize];
     protected int[] y = new int[windowSize];
-    private int applex;
-    private int appley;
-    private int applexx;
-    private int appleyy;
+    private int appleOneCoordX;
+    private int appleOneCoordY;
+    private int appleTwoCoordX;
+    private int appleTwoCoordY;
     private boolean left = false;
     private boolean right = false;
     private boolean up = false;
@@ -78,21 +78,21 @@ public class Board extends JPanel implements ActionListener {
      * @param g Grahpics obj.
      */
     public void drawApple(Graphics g) {
-        if (neednewAppleFirst) {
+        if (needNewAppleSecond) {
             int limitVariable = 50;
-            appley = DOTS_SIZE * ((int) (Math.random() * limitVariable));
-            applex = DOTS_SIZE * ((int) (Math.random() * limitVariable));
-            neednewAppleFirst = false;
+            appleOneCoordY = DOTS_SIZE * ((int) (Math.random() * limitVariable));
+            appleOneCoordX = DOTS_SIZE * ((int) (Math.random() * limitVariable));
+            needNewAppleSecond = false;
         }
-        g.drawImage(appleImg, applex, appley, this);
+        g.drawImage(appleImg, appleOneCoordX, appleOneCoordY, this);
 
-        if (neednewAppleSecond) {
+        if (needNewAppleFirst) {
             int limitVariable = 50;
-            applexx = DOTS_SIZE * ((int) (Math.random() * limitVariable));
-            appleyy = DOTS_SIZE * ((int) (Math.random() * limitVariable));
-            neednewAppleSecond = false;
+            appleTwoCoordX = DOTS_SIZE * ((int) (Math.random() * limitVariable));
+            appleTwoCoordY = DOTS_SIZE * ((int) (Math.random() * limitVariable));
+            needNewAppleFirst = false;
         }
-        g.drawImage(appleImg, applexx, appleyy, this);
+        g.drawImage(appleImg, appleTwoCoordX, appleTwoCoordY, this);
     }
 
     /**
@@ -144,17 +144,17 @@ public class Board extends JPanel implements ActionListener {
      * Checking ate apple. If ate, create new, using the flag.
      */
     void checkApple() {
-        checkApple(applex, appley);
-        checkApple(applexx, appleyy);
+        checkApple(appleOneCoordX, appleOneCoordY);
+        checkApple(appleTwoCoordX, appleTwoCoordY);
 
-        if ((x[0] == applex) & (y[0] == appley)) {
+        if ((x[0] == appleOneCoordX) & (y[0] == appleOneCoordY)) {
             DOTS++;
-            neednewAppleFirst = true;
+            needNewAppleFirst = true;
             isNeedSearchAppleZone = true;
         }
-        if ((x[0] == applexx) & (y[0] == appleyy)) {
+        if ((x[0] == appleTwoCoordX) & (y[0] == appleTwoCoordY)) {
             DOTS++;
-            neednewAppleSecond = true;
+            needNewAppleSecond = true;
             isNeedSearchAppleZone = true;
         }
     }
@@ -170,43 +170,43 @@ public class Board extends JPanel implements ActionListener {
                 repaint();
                 break;
             case 1:
-                applex -= 10;
-                appley += 10;
+                appleOneCoordX -= 10;
+                appleOneCoordY += 10;
                 repaint();
                 break;
             case 2:
-                applex += 10;
-                appley += 10;
+                appleOneCoordX += 10;
+                appleOneCoordY += 10;
                 repaint();
                 break;
             case 3:
-                applex -= 10;
-                appley += 10;
+                appleOneCoordX -= 10;
+                appleOneCoordY += 10;
                 repaint();
                 break;
             case 4:
-                applex += 10;
-                appley -= 10;
+                appleOneCoordX += 10;
+                appleOneCoordY -= 10;
                 repaint();
                 break;
             case 5:
-                applex += 10;
-                appley += 10;
+                appleOneCoordX += 10;
+                appleOneCoordY += 10;
                 repaint();
                 break;
             case 6:
-                applex += 10;
-                appley -= 10;
+                appleOneCoordX += 10;
+                appleOneCoordY -= 10;
                 repaint();
                 break;
             case 7:
-                applex -= 10;
-                appley -= 10;
+                appleOneCoordX -= 10;
+                appleOneCoordY -= 10;
                 repaint();
                 break;
             case 8:
-                applex -= 10;
-                appley -= 10;
+                appleOneCoordX -= 10;
+                appleOneCoordY -= 10;
                 repaint();
                 break;
         }
@@ -217,7 +217,7 @@ public class Board extends JPanel implements ActionListener {
      * Moving the snake in order of pressed button.
      */
     void move() {
-        if (x[0] == -10 | x[0] == windowSize | y[0] == -10 | y[0] == windowSize) {
+        if (x[0] == -10 | x[0] == windowSize-30 | y[0] == -10 | y[0] == windowSize-30) {
             JOptionPane.showMessageDialog(null, "Meeting with the wall");
             System.exit(0);
         }
