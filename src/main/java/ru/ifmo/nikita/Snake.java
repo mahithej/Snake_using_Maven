@@ -4,7 +4,7 @@ import javax.swing.*;
 import javax.swing.JFrame;
 
 /**
- * Window creating
+ * Snake class
  */
 public class Snake extends JFrame {
     private int windowSize = 500;
