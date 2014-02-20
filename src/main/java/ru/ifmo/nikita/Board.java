@@ -9,10 +9,7 @@ package ru.ifmo.nikita;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 
@@ -21,14 +18,14 @@ import java.util.ArrayList;
  * {@value } goos.
  */
 public class Board extends JPanel implements ActionListener {
-    private int windowSize = 500;
+    private int snakePanelsize = 500;
     private int dotsSize = 10;
     private int dots = 3;
     private boolean needNewAppleFirst = true;
     private boolean needNewAppleSecond = true;
     protected boolean isNeedSearchAppleZone = true;
-    protected int[] x = new int[windowSize];
-    protected int[] y = new int[windowSize];
+    protected int[] x = new int[snakePanelsize];
+    protected int[] y = new int[snakePanelsize];
     private int appleOneCoordX;
     private int appleOneCoordY;
     private int appleTwoCoordX;
@@ -38,9 +35,10 @@ public class Board extends JPanel implements ActionListener {
     private boolean up = false;
     private boolean down = false;
     private Image body, appleImg;
-    private ArrayList<Integer> listOfCoordX = new ArrayList<Integer>();
-    private ArrayList<Integer> listOfCoordY = new ArrayList<Integer>();
-    JPanel button=new JPanel();
+    // private ArrayList<Integer> listOfCoordX = new ArrayList<Integer>();
+    //  private ArrayList<Integer> listOfCoordY = new ArrayList<Integer>();
+    JButton button = new JButton("Restart");
+
     /**
      * Constructor, running only once, at the beginning.
      */
@@ -52,7 +50,13 @@ public class Board extends JPanel implements ActionListener {
         appleImg = _apple.getImage();
         start();
         setFocusable(true);
-        setBackground(Color.BLACK);
+        setBackground(Color.LIGHT_GRAY);
+        setBounds(50, 20, snakePanelsize, snakePanelsize);
+        setLayout(null);
+        button.setBounds(0, 0, 100, 100);
+        add(button);
+        button.addMouseListener(new MouseListener());
+
     }
 
     /**
@@ -64,10 +68,10 @@ public class Board extends JPanel implements ActionListener {
             int startPosOfSnake = 50;
             x[z] = startPosOfSnake - z * dotsSize;
             y[z] = startPosOfSnake;
-            if (z != 0) {
+            /*if (z != 0) {
                 listOfCoordX.add(x[z]);
                 listOfCoordY.add(y[z]);
-            }
+            }  */
         }
         int delay = 150;
         Timer timer = new Timer(delay, this);
@@ -95,6 +99,7 @@ public class Board extends JPanel implements ActionListener {
             needNewAppleFirst = false;
         }
         g.drawImage(appleImg, appleTwoCoordX, appleTwoCoordY, this);
+
     }
 
     /**
@@ -222,13 +227,13 @@ public class Board extends JPanel implements ActionListener {
      * Moving the snake in order of pressed button.
      */
     void move() {
-        if (x[0] == -10 | x[0] == windowSize - 30 | y[0] == -10 | y[0] == windowSize) {
+        if (x[0] == -10 | x[0] == snakePanelsize | y[0] == -10 | y[0] == snakePanelsize) {
             JOptionPane.showMessageDialog(null, "Meeting with the wall");
             System.exit(0);
         }
-        if (listOfCoordX.contains(x[0]) & listOfCoordY.contains(y[0])) {
+     /*   if (listOfCoordX.contains(x[0]) & listOfCoordY.contains(y[0])) {
             JOptionPane.showMessageDialog(null, "Selfmeeting");
-        }
+        }       */
         for (int z = dots; z > 0; z--) {
             x[z] = x[(z - 1)];
             y[z] = y[(z - 1)];
@@ -295,6 +300,15 @@ public class Board extends JPanel implements ActionListener {
                 left = false;
             }
         }
+
+
     }
 
+    private class MouseListener extends MouseAdapter {
+        public void mouseClicked(MouseEvent event) {
+
+
+        }
+    }
 }
+
