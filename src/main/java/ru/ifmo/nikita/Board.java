@@ -7,6 +7,8 @@
  */
 package ru.ifmo.nikita;
 
+import sun.font.TextLabel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -37,11 +39,12 @@ public class Board extends JPanel implements ActionListener {
     private Image body, appleImg;
     // private ArrayList<Integer> listOfCoordX = new ArrayList<Integer>();
     //  private ArrayList<Integer> listOfCoordY = new ArrayList<Integer>();
-    JButton button = new JButton("Restart");
 
     /**
      * Constructor, running only once, at the beginning.
      */
+    ControlPanel contrObjj = new ControlPanel();
+
     public Board() {
         addKeyListener(new ActionListener());
         ImageIcon _dot = new ImageIcon(this.getClass().getResource("/dot.png"));
@@ -53,10 +56,7 @@ public class Board extends JPanel implements ActionListener {
         setBackground(Color.LIGHT_GRAY);
         setBounds(50, 20, snakePanelsize, snakePanelsize);
         setLayout(null);
-        button.setBounds(0, 0, 100, 100);
-        add(button);
-        button.addMouseListener(new MouseListener());
-
+        // new ControlPanel().setLabel();
     }
 
     /**
@@ -77,6 +77,7 @@ public class Board extends JPanel implements ActionListener {
         Timer timer = new Timer(delay, this);
         timer.start();
     }
+
 
     /**
      * Method for 2 apples drawing.
@@ -300,15 +301,27 @@ public class Board extends JPanel implements ActionListener {
                 left = false;
             }
         }
-
-
-    }
-
-    private class MouseListener extends MouseAdapter {
-        public void mouseClicked(MouseEvent event) {
-
-
-        }
     }
 }
 
+class MouseListener extends MouseAdapter {
+    public void mouseClicked(MouseEvent event) {
+        System.exit(0);
+    }
+}
+
+class ControlPanel extends JPanel {
+    JButton butRestart = new JButton("Restart");
+    JButton butExit = new JButton("Exit");
+
+    ControlPanel() {
+        setBounds(50, 550, 500, 70);
+        setLayout(null);
+        setBackground(Color.LIGHT_GRAY);
+        butRestart.setBounds(100, 10, 100, 50);
+        add(butRestart);
+        butExit.setBounds(350, 10, 100, 50);
+        add(butExit);
+        butExit.addMouseListener(new MouseListener());
+    }
+}
