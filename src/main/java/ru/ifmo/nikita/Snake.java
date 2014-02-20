@@ -4,14 +4,18 @@ import javax.swing.*;
 import javax.swing.JFrame;
 
 /**
- * Snake class
+ * GUI
  */
 public class Snake extends JFrame {
-    private int windowSize = 500;
+    private int WINDOWS_HEIGHT = 600;
+    private int WINDOWS_WIDTH = 700;
+
     public Snake() {
-        add(new Board());
+        Board boardObj = new Board();
+        add(boardObj);
+        setLayout(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setSize(windowSize, windowSize);
+        setSize(WINDOWS_HEIGHT, WINDOWS_WIDTH);
         setLocationRelativeTo(null);
         setTitle("Snake");
         setResizable(false);
@@ -21,7 +25,8 @@ public class Snake extends JFrame {
 
     /**
      * Main method.
-     * @param args  args
+     *
+     * @param args args
      */
     public static void main(String[] args) {
         new Snake();
