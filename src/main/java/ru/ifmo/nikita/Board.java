@@ -56,6 +56,7 @@ public class Board extends JPanel implements ActionListener {
         setBackground(Color.LIGHT_GRAY);
         setBounds(50, 20, snakePanelsize, snakePanelsize);
         setLayout(null);
+        contrObjj.setLabel();
         // new ControlPanel().setLabel();
     }
 
@@ -224,14 +225,25 @@ public class Board extends JPanel implements ActionListener {
 
     }
 
+    void gameOverShow() {
+        JOptionPane.showMessageDialog(null, "Game Over");
+        System.exit(0);
+    }
+
     /**
      * Moving the snake in order of pressed button.
      */
     void move() {
         if (x[0] == -10 | x[0] == snakePanelsize | y[0] == -10 | y[0] == snakePanelsize) {
-            JOptionPane.showMessageDialog(null, "Meeting with the wall");
-            System.exit(0);
+            new Board().gameOverShow();
         }
+
+        for (int z = dots; z > 0; z--) {
+            if ((z > 3) && (x[0] == x[z]) && (y[0] == y[z])) {
+                new Board().gameOverShow();
+            }
+        }
+
      /*   if (listOfCoordX.contains(x[0]) & listOfCoordY.contains(y[0])) {
             JOptionPane.showMessageDialog(null, "Selfmeeting");
         }       */
@@ -301,7 +313,11 @@ public class Board extends JPanel implements ActionListener {
                 left = false;
             }
         }
+
+
     }
+
+
 }
 
 class MouseListener extends MouseAdapter {
@@ -313,15 +329,30 @@ class MouseListener extends MouseAdapter {
 class ControlPanel extends JPanel {
     JButton butRestart = new JButton("Restart");
     JButton butExit = new JButton("Exit");
+    JLabel TFObj = new JLabel();
 
     ControlPanel() {
         setBounds(50, 550, 500, 70);
         setLayout(null);
         setBackground(Color.LIGHT_GRAY);
+
+        //   TFObj.setText("sssssssssssssssssssssS");
+        //  TFObj.setBounds(0, 0, 50, 50);
+        //   add(TFObj);
+
         butRestart.setBounds(100, 10, 100, 50);
         add(butRestart);
         butExit.setBounds(350, 10, 100, 50);
         add(butExit);
         butExit.addMouseListener(new MouseListener());
+
     }
+
+    public void setLabel() {
+        TFObj.setText("sssssssssssssssssssssS");
+        // setLayout(null);
+        TFObj.setBounds(0, 0, 50, 50);
+        add(TFObj);
+    }
+
 }
