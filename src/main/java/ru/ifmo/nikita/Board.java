@@ -3,12 +3,12 @@
  * ru.ifmo.nikita package.
  * @see java.awt.
  * @deprecated s.
- * @since w.
+ * @since Java SE 1.7
+ * @author Ivanov Nikita | tazg@ya.ru | SPb ITMO 5159
  */
 package ru.ifmo.nikita;
 
 import sun.font.TextLabel;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -23,22 +23,20 @@ public class Board extends JPanel implements ActionListener {
     private int snakePanelsize = 500;
     private int dotsSize = 10;
     private int dots = 3;
-    private boolean needNewAppleFirst = true;
-    private boolean needNewAppleSecond = true;
+    private boolean isNeedFirstAppleDraw = true;
+    private boolean isNeedSecondAppleDraw = true;
     protected boolean isNeedSearchAppleZone = true;
     protected int[] x = new int[snakePanelsize];
     protected int[] y = new int[snakePanelsize];
-    private int appleOneCoordX;
-    private int appleOneCoordY;
-    private int appleTwoCoordX;
-    private int appleTwoCoordY;
+    private int firstAppleCoordY;
+    private int firstAppleCoordX;
+    private int secondAppleCoordX;
+    private int secondAppleCoordY;
     private boolean left = false;
     private boolean right = false;
     private boolean up = false;
     private boolean down = false;
     private Image body, appleImg;
-    // private ArrayList<Integer> listOfCoordX = new ArrayList<Integer>();
-    //  private ArrayList<Integer> listOfCoordY = new ArrayList<Integer>();
 
     /**
      * Constructor, running only once, at the beginning.
@@ -57,7 +55,6 @@ public class Board extends JPanel implements ActionListener {
         setBounds(50, 20, snakePanelsize, snakePanelsize);
         setLayout(null);
         contrObjj.setLabel();
-        // new ControlPanel().setLabel();
     }
 
     /**
@@ -69,10 +66,6 @@ public class Board extends JPanel implements ActionListener {
             int startPosOfSnake = 50;
             x[z] = startPosOfSnake - z * dotsSize;
             y[z] = startPosOfSnake;
-            /*if (z != 0) {
-                listOfCoordX.add(x[z]);
-                listOfCoordY.add(y[z]);
-            }  */
         }
         int delay = 150;
         Timer timer = new Timer(delay, this);
@@ -86,21 +79,21 @@ public class Board extends JPanel implements ActionListener {
      * @param g Grahpics obj.
      */
     public void drawApple(Graphics g) {
-        if (needNewAppleSecond) {
+        if (isNeedSecondAppleDraw) {
             int limitVariable = 50;
-            appleTwoCoordY = dotsSize * ((int) (Math.random() * limitVariable));
-            appleTwoCoordX = dotsSize * ((int) (Math.random() * limitVariable));
-            needNewAppleSecond = false;
+            secondAppleCoordY = dotsSize * ((int) (Math.random() * limitVariable));
+            secondAppleCoordX = dotsSize * ((int) (Math.random() * limitVariable));
+            isNeedSecondAppleDraw = false;
         }
-        g.drawImage(appleImg, appleOneCoordX, appleOneCoordY, this);
+        g.drawImage(appleImg, firstAppleCoordY, firstAppleCoordX, this);
 
-        if (needNewAppleFirst) {
+        if (isNeedFirstAppleDraw) {
             int limitVariable = 50;
-            appleOneCoordX = dotsSize * ((int) (Math.random() * limitVariable));
-            appleOneCoordY = dotsSize * ((int) (Math.random() * limitVariable));
-            needNewAppleFirst = false;
+            firstAppleCoordY = dotsSize * ((int) (Math.random() * limitVariable));
+            firstAppleCoordX = dotsSize * ((int) (Math.random() * limitVariable));
+            isNeedFirstAppleDraw = false;
         }
-        g.drawImage(appleImg, appleTwoCoordX, appleTwoCoordY, this);
+        g.drawImage(appleImg, secondAppleCoordX, secondAppleCoordY, this);
 
     }
 
@@ -153,17 +146,17 @@ public class Board extends JPanel implements ActionListener {
      * Checking ate apple. If ate, create new, using the flag.
      */
     private void checkApple() {
-        checkApple(appleOneCoordX, appleOneCoordY);
-        checkApple(appleTwoCoordX, appleTwoCoordY);
+        checkApple(firstAppleCoordY, firstAppleCoordX);
+        checkApple(secondAppleCoordX, secondAppleCoordY);
 
-        if ((x[0] == appleOneCoordX) & (y[0] == appleOneCoordY)) {
+        if ((x[0] == firstAppleCoordY) & (y[0] == firstAppleCoordX)) {
             dots++;
-            needNewAppleFirst = true;
+            isNeedFirstAppleDraw = true;
             isNeedSearchAppleZone = true;
         }
-        if ((x[0] == appleTwoCoordX) & (y[0] == appleTwoCoordY)) {
+        if ((x[0] == secondAppleCoordX) & (y[0] == secondAppleCoordY)) {
             dots++;
-            needNewAppleSecond = true;
+            isNeedSecondAppleDraw = true;
             isNeedSearchAppleZone = true;
         }
     }
@@ -179,43 +172,43 @@ public class Board extends JPanel implements ActionListener {
                 repaint();
                 break;
             case 1:
-                appleOneCoordX -= 10;
-                appleOneCoordY += 10;
+                firstAppleCoordY -= 10;
+                firstAppleCoordX += 10;
                 repaint();
                 break;
             case 2:
-                appleOneCoordX += 10;
-                appleOneCoordY += 10;
+                firstAppleCoordY += 10;
+                firstAppleCoordX += 10;
                 repaint();
                 break;
             case 3:
-                appleOneCoordX -= 10;
-                appleOneCoordY += 10;
+                firstAppleCoordY -= 10;
+                firstAppleCoordX += 10;
                 repaint();
                 break;
             case 4:
-                appleOneCoordX += 10;
-                appleOneCoordY -= 10;
+                firstAppleCoordY += 10;
+                firstAppleCoordX -= 10;
                 repaint();
                 break;
             case 5:
-                appleOneCoordX += 10;
-                appleOneCoordY += 10;
+                firstAppleCoordY += 10;
+                firstAppleCoordX += 10;
                 repaint();
                 break;
             case 6:
-                appleOneCoordX += 10;
-                appleOneCoordY -= 10;
+                firstAppleCoordY += 10;
+                firstAppleCoordX -= 10;
                 repaint();
                 break;
             case 7:
-                appleOneCoordX -= 10;
-                appleOneCoordY -= 10;
+                firstAppleCoordY -= 10;
+                firstAppleCoordX -= 10;
                 repaint();
                 break;
             case 8:
-                appleOneCoordX -= 10;
-                appleOneCoordY -= 10;
+                firstAppleCoordY -= 10;
+                firstAppleCoordX -= 10;
                 repaint();
                 break;
             default:
@@ -226,8 +219,11 @@ public class Board extends JPanel implements ActionListener {
     }
 
     void gameOverShow() {
-        JOptionPane.showMessageDialog(null, "Game Over");
-        System.exit(0);
+        setFocusable(true);
+        setBackground(Color.BLACK);
+        setBounds(30, 20, snakePanelsize, snakePanelsize);
+        // setLayout(null);
+        // System.exit(0);
     }
 
     /**
@@ -244,9 +240,6 @@ public class Board extends JPanel implements ActionListener {
             }
         }
 
-     /*   if (listOfCoordX.contains(x[0]) & listOfCoordY.contains(y[0])) {
-            JOptionPane.showMessageDialog(null, "Selfmeeting");
-        }       */
         for (int z = dots; z > 0; z--) {
             x[z] = x[(z - 1)];
             y[z] = y[(z - 1)];
@@ -314,9 +307,7 @@ public class Board extends JPanel implements ActionListener {
             }
         }
 
-
     }
-
 
 }
 
@@ -335,11 +326,6 @@ class ControlPanel extends JPanel {
         setBounds(50, 550, 500, 70);
         setLayout(null);
         setBackground(Color.LIGHT_GRAY);
-
-        //   TFObj.setText("sssssssssssssssssssssS");
-        //  TFObj.setBounds(0, 0, 50, 50);
-        //   add(TFObj);
-
         butRestart.setBounds(100, 10, 100, 50);
         add(butRestart);
         butExit.setBounds(350, 10, 100, 50);
@@ -350,7 +336,6 @@ class ControlPanel extends JPanel {
 
     public void setLabel() {
         TFObj.setText("sssssssssssssssssssssS");
-        // setLayout(null);
         TFObj.setBounds(0, 0, 50, 50);
         add(TFObj);
     }
