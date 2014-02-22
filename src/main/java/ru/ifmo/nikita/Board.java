@@ -8,18 +8,35 @@
  */
 package ru.ifmo.nikita;
 
-import sun.font.TextLabel;
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
+import java.util.*;
+import java.util.List;
 
+
+class Pair {
+    /**
+     * @param x coordinates X
+     * @param y coordinates Y
+     * @return object consists of X and Y int values as coordinates
+     */
+    public Object getPairAsObj(int x, int y) {
+
+        ArrayList pair = new ArrayList();
+        pair.add(x);
+        pair.add(y);
+        return pair;
+
+    }
+}
 
 /**
  * I've no idea why CheckStyle indicates javadoc error on values description.
  * {@value } goos.
  */
-public class Board extends JPanel implements ActionListener {
+class Board extends JPanel implements ActionListener {
     private int snakePanelsize = 500;
     private int dotsSize = 10;
     private int dots = 3;
@@ -28,19 +45,16 @@ public class Board extends JPanel implements ActionListener {
     protected boolean isNeedSearchAppleZone = true;
     protected int[] x = new int[snakePanelsize];
     protected int[] y = new int[snakePanelsize];
-    private int firstAppleCoordY;
-    private int firstAppleCoordX;
-    private int secondAppleCoordX;
-    private int secondAppleCoordY;
+    private int firstAppleY;
+    private int firstAppleX;
+    private int secondAppleX;
+    private int secondAppleY;
     private boolean left = false;
     private boolean right = false;
     private boolean up = false;
     private boolean down = false;
     private Image body, appleImg;
-
-    /**
-     * Constructor, running only once, at the beginning.
-     */
+    List<Object> appleSearchZoneXYList = new ArrayList<Object>();
     ControlPanel contrObjj = new ControlPanel();
 
     public Board() {
@@ -81,19 +95,19 @@ public class Board extends JPanel implements ActionListener {
     public void drawApple(Graphics g) {
         if (isNeedSecondAppleDraw) {
             int limitVariable = 50;
-            secondAppleCoordY = dotsSize * ((int) (Math.random() * limitVariable));
-            secondAppleCoordX = dotsSize * ((int) (Math.random() * limitVariable));
+            secondAppleY = dotsSize * ((int) (Math.random() * limitVariable));
+            secondAppleX = dotsSize * ((int) (Math.random() * limitVariable));
             isNeedSecondAppleDraw = false;
         }
-        g.drawImage(appleImg, firstAppleCoordY, firstAppleCoordX, this);
+        g.drawImage(appleImg, firstAppleY, firstAppleX, this);
 
         if (isNeedFirstAppleDraw) {
             int limitVariable = 50;
-            firstAppleCoordY = dotsSize * ((int) (Math.random() * limitVariable));
-            firstAppleCoordX = dotsSize * ((int) (Math.random() * limitVariable));
+            firstAppleY = dotsSize * ((int) (Math.random() * limitVariable));
+            firstAppleX = dotsSize * ((int) (Math.random() * limitVariable));
             isNeedFirstAppleDraw = false;
         }
-        g.drawImage(appleImg, secondAppleCoordX, secondAppleCoordY, this);
+        g.drawImage(appleImg, secondAppleX, secondAppleY, this);
 
     }
 
@@ -112,30 +126,24 @@ public class Board extends JPanel implements ActionListener {
 
     /**
      * Checking for escaping apple. If snake is around apple, need to escaping apple.
-     * values 10 and 20 - is coordinates for neighbor dots.
+     * values 10 and 20 - is neighbor dots coordinates.
      *
-     * @param xx X coordinates for apple.
-     * @param yy Y coordinates for apple.
+     * @param appleX X coordinates for apple.
+     * @param appleY Y coordinates for apple.
      */
-    public void checkApple(int xx, int yy) {
+    public void checkApple(int appleX, int appleY) {
+        int localX, localY;
+        int appleEscapingZone = 20;
         if (isNeedSearchAppleZone) {
-            if (((x[0] + 20 == xx) & (y[0] + 10 == yy))
-                    | ((x[0] + 20 == xx) & (y[0] + 20 == yy))
-                    | ((x[0] + 20 == xx) & (y[0] == yy))
-                    | ((x[0] + 20 == xx) & (y[0] - 10 == yy))
-                    | ((x[0] + 20 == xx) & (y[0] - 20 == yy))
-                    | ((x[0] + 10 == xx) & (y[0] + 20 == yy))
-                    | ((x[0] + 10 == xx) & (y[0] - 20 == yy))
-                    | ((x[0] == xx) & (y[0] + 20 == yy))
-                    | ((x[0] == xx) & (y[0] - 20 == yy))
-                    | ((x[0] - 10 == xx) & (y[0] + 20 == yy))
-                    | ((x[0] - 10 == xx) & (y[0] - 20 == yy))
-                    | ((x[0] - 20 == xx) & (y[0] + 20 == yy))
-                    | ((x[0] - 20 == xx) & (y[0] + 10 == yy))
-                    | ((x[0] - 20 == xx) & (y[0] == yy))
-                    | ((x[0] - 20 == xx) & (y[0] - 10 == yy))
-                    | ((x[0] - 20 == xx) & (y[0] - 20 == yy))
-                    ) {
+
+            appleSearchZoneXYList.clear();
+            for (localX = appleX - appleEscapingZone; localX < appleX + appleEscapingZone; localX += dotsSize) {
+                for (localY = appleY - appleEscapingZone; localY < appleY + appleEscapingZone; localY += dotsSize) {
+                    appleSearchZoneXYList.add(new Pair().getPairAsObj(localX, localY));
+                }
+            }
+
+            if (appleSearchZoneXYList.contains(new Pair().getPairAsObj(x[0], y[0]))) {
                 isNeedSearchAppleZone = false;
                 appleEscaping();
             }
@@ -146,15 +154,15 @@ public class Board extends JPanel implements ActionListener {
      * Checking ate apple. If ate, create new, using the flag.
      */
     private void checkApple() {
-        checkApple(firstAppleCoordY, firstAppleCoordX);
-        checkApple(secondAppleCoordX, secondAppleCoordY);
+        checkApple(firstAppleY, firstAppleX);
+        checkApple(secondAppleX, secondAppleY);
 
-        if ((x[0] == firstAppleCoordY) & (y[0] == firstAppleCoordX)) {
+        if ((x[0] == firstAppleY) & (y[0] == firstAppleX)) {
             dots++;
             isNeedFirstAppleDraw = true;
             isNeedSearchAppleZone = true;
         }
-        if ((x[0] == secondAppleCoordX) & (y[0] == secondAppleCoordY)) {
+        if ((x[0] == secondAppleX) & (y[0] == secondAppleY)) {
             dots++;
             isNeedSecondAppleDraw = true;
             isNeedSearchAppleZone = true;
@@ -172,43 +180,43 @@ public class Board extends JPanel implements ActionListener {
                 repaint();
                 break;
             case 1:
-                firstAppleCoordY -= 10;
-                firstAppleCoordX += 10;
+                firstAppleY -= 10;
+                firstAppleX += 10;
                 repaint();
                 break;
             case 2:
-                firstAppleCoordY += 10;
-                firstAppleCoordX += 10;
+                firstAppleY += 10;
+                firstAppleX += 10;
                 repaint();
                 break;
             case 3:
-                firstAppleCoordY -= 10;
-                firstAppleCoordX += 10;
+                firstAppleY -= 10;
+                firstAppleX += 10;
                 repaint();
                 break;
             case 4:
-                firstAppleCoordY += 10;
-                firstAppleCoordX -= 10;
+                firstAppleY += 10;
+                firstAppleX -= 10;
                 repaint();
                 break;
             case 5:
-                firstAppleCoordY += 10;
-                firstAppleCoordX += 10;
+                firstAppleY += 10;
+                firstAppleX += 10;
                 repaint();
                 break;
             case 6:
-                firstAppleCoordY += 10;
-                firstAppleCoordX -= 10;
+                firstAppleY += 10;
+                firstAppleX -= 10;
                 repaint();
                 break;
             case 7:
-                firstAppleCoordY -= 10;
-                firstAppleCoordX -= 10;
+                firstAppleY -= 10;
+                firstAppleX -= 10;
                 repaint();
                 break;
             case 8:
-                firstAppleCoordY -= 10;
-                firstAppleCoordX -= 10;
+                firstAppleY -= 10;
+                firstAppleX -= 10;
                 repaint();
                 break;
             default:
@@ -218,12 +226,15 @@ public class Board extends JPanel implements ActionListener {
 
     }
 
+    /**
+     * gameOverShow method shows game ending.
+     */
     void gameOverShow() {
         setFocusable(true);
         setBackground(Color.BLACK);
         setBounds(30, 20, snakePanelsize, snakePanelsize);
-        // setLayout(null);
-        // System.exit(0);
+        setLayout(null);
+        System.exit(0);
     }
 
     /**
@@ -262,7 +273,7 @@ public class Board extends JPanel implements ActionListener {
     /**
      * Listener method for buttons.
      *
-     * @param e object for event
+     * @param e argument as object
      */
     public void actionPerformed(ActionEvent e) {
         move();
@@ -279,7 +290,7 @@ public class Board extends JPanel implements ActionListener {
         /**
          * Getting the Key event.
          *
-         * @param e event object.
+         * @param e argument as object.
          */
         public void keyPressed(KeyEvent e) {
             if ((e.getKeyCode() == KeyEvent.VK_LEFT) && (!right)) {
@@ -317,11 +328,17 @@ class MouseListener extends MouseAdapter {
     }
 }
 
+/**
+ * The bottom panel with 2 buttons on it.
+ */
 class ControlPanel extends JPanel {
     JButton butRestart = new JButton("Restart");
     JButton butExit = new JButton("Exit");
     JLabel TFObj = new JLabel();
 
+    /**
+     * Setting buttons on Panel.
+     */
     ControlPanel() {
         setBounds(50, 550, 500, 70);
         setLayout(null);
@@ -334,6 +351,9 @@ class ControlPanel extends JPanel {
 
     }
 
+    /**
+     * Trying to set a Score on panel.
+     */
     public void setLabel() {
         TFObj.setText("sssssssssssssssssssssS");
         TFObj.setBounds(0, 0, 50, 50);
