@@ -15,23 +15,6 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
-
-class Pair {
-    /**
-     * @param x coordinates X
-     * @param y coordinates Y
-     * @return object consists of X and Y int values as coordinates
-     */
-    public Object getPairAsObj(int x, int y) {
-
-        ArrayList pair = new ArrayList();
-        pair.add(x);
-        pair.add(y);
-        return pair;
-
-    }
-}
-
 /**
  * I've no idea why CheckStyle indicates javadoc error on values description.
  * {@value } goos.
@@ -125,6 +108,22 @@ class Board extends JPanel implements ActionListener {
     }
 
     /**
+     * To get pair of X and Y coordinates as object.
+     *
+     * @param x
+     * @param y
+     * @return object consists of X and Y int values as coordinates
+     */
+    public Object getPairAsObj(int x, int y) {
+
+        ArrayList pair = new ArrayList();
+        pair.add(x);
+        pair.add(y);
+        return pair;
+
+    }
+
+    /**
      * Checking for escaping apple. If snake is around apple, need to escaping apple.
      * values 10 and 20 - is neighbor dots coordinates.
      *
@@ -134,16 +133,17 @@ class Board extends JPanel implements ActionListener {
     public void checkApple(int appleX, int appleY) {
         int localX, localY;
         int appleEscapingZone = 20;
+
         if (isNeedSearchAppleZone) {
 
             appleSearchZoneXYList.clear();
             for (localX = appleX - appleEscapingZone; localX < appleX + appleEscapingZone; localX += dotsSize) {
                 for (localY = appleY - appleEscapingZone; localY < appleY + appleEscapingZone; localY += dotsSize) {
-                    appleSearchZoneXYList.add(new Pair().getPairAsObj(localX, localY));
+                    appleSearchZoneXYList.add(getPairAsObj(localX, localY));
                 }
             }
 
-            if (appleSearchZoneXYList.contains(new Pair().getPairAsObj(x[0], y[0]))) {
+            if (appleSearchZoneXYList.contains(getPairAsObj(x[0], y[0]))) {
                 isNeedSearchAppleZone = false;
                 appleEscaping();
             }
@@ -324,7 +324,8 @@ class Board extends JPanel implements ActionListener {
 
 class MouseListener extends MouseAdapter {
     public void mouseClicked(MouseEvent event) {
-        System.exit(0);
+        new Board();
+
     }
 }
 
@@ -348,7 +349,7 @@ class ControlPanel extends JPanel {
         butExit.setBounds(350, 10, 100, 50);
         add(butExit);
         butExit.addMouseListener(new MouseListener());
-
+        butRestart.addMouseListener(new MouseListener());
     }
 
     /**
