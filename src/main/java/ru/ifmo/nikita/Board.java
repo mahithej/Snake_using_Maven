@@ -131,7 +131,7 @@ class Board extends JPanel implements ActionListener {
      * @param appleY Y coordinates for apple.
      * @return apppleSearchZoneXYList object for the UnitTest.
      */
-    public Object checkApple(int appleX, int appleY) {
+    public Object checkSnakeIsNearByApple(int appleX, int appleY) {
         int localX, localY;
         int appleEscapingZone = 20;
 
@@ -155,8 +155,8 @@ class Board extends JPanel implements ActionListener {
      * Checking ate apple. If ate, create new, using the flag.
      */
     private void checkApple() {
-        checkApple(firstAppleY, firstAppleX);
-        checkApple(secondAppleX, secondAppleY);
+        checkSnakeIsNearByApple(firstAppleY, firstAppleX);
+        checkSnakeIsNearByApple(secondAppleX, secondAppleY);
 
         if ((x[0] == firstAppleY) & (y[0] == firstAppleX)) {
             dots++;
