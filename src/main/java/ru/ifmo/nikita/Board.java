@@ -46,7 +46,7 @@ class Board extends JPanel implements ActionListener {
         body = _dot.getImage();
         ImageIcon _apple = new ImageIcon(this.getClass().getResource("/apple.png"));
         appleImg = _apple.getImage();
-        start();
+        initGame();
         setFocusable(true);
         setBackground(Color.LIGHT_GRAY);
         setBounds(50, 20, snakePanelsize, snakePanelsize);
@@ -55,9 +55,9 @@ class Board extends JPanel implements ActionListener {
     }
 
     /**
-     * The start method. Initializing Timer and snake.
+     * Game initializing  method. Initializing Timer and snake.
      */
-    private void start() {
+    private void initGame() {
 
         for (int z = 0; z < dots; z++) {
             int startPosOfSnake = 50;
@@ -129,8 +129,9 @@ class Board extends JPanel implements ActionListener {
      *
      * @param appleX X coordinates for apple.
      * @param appleY Y coordinates for apple.
+     * @return apppleSearchZoneXYList object for the UnitTest.
      */
-    public void checkApple(int appleX, int appleY) {
+    public Object checkApple(int appleX, int appleY) {
         int localX, localY;
         int appleEscapingZone = 20;
 
@@ -147,7 +148,7 @@ class Board extends JPanel implements ActionListener {
                 isNeedSearchAppleZone = false;
                 appleEscaping();
             }
-        }
+        }  return appleSearchZoneXYList;
     }
 
     /**
@@ -324,8 +325,8 @@ class Board extends JPanel implements ActionListener {
 
 class MouseListener extends MouseAdapter {
     public void mouseClicked(MouseEvent event) {
-        new Board();
-
+       // System.exit(0);
+      new Board();
     }
 }
 
