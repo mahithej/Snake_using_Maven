@@ -6,7 +6,7 @@
  * @since Java SE 1.7
  * @author Ivanov Nikita | tazg@ya.ru | SPb ITMO 5159
  */
-package ru.ifmo.nikita;
+package ru.ifmo.snake;
 
 import javax.swing.*;
 import javax.swing.Timer;
@@ -19,7 +19,7 @@ import java.util.List;
  * I've no idea why CheckStyle indicates javadoc error on values description.
  * {@value } goos.
  */
-class Board extends JPanel implements ActionListener {
+class Board extends JPanel implements ActionListener, Runnable {
     private int snakePanelsize = 500;
     private int dotsSize = 10;
     private int dots = 3;
@@ -39,6 +39,7 @@ class Board extends JPanel implements ActionListener {
     private Image body, appleImg;
     List<Object> appleSearchZoneXYList = new ArrayList<Object>();
     ControlPanel contrObjj = new ControlPanel();
+    Thread escapingThreadFirstApple;
 
     public Board() {
         addKeyListener(new ActionListener());
@@ -146,10 +147,76 @@ class Board extends JPanel implements ActionListener {
 
             if (appleSearchZoneXYList.contains(getPairAsObj(x[0], y[0]))) {
                 isNeedSearchAppleZone = false;
-                appleEscaping();
+                escapingThreadFirstApple = new Thread(this);
+                escapingThreadFirstApple.start();
             }
-        }  return appleSearchZoneXYList;
+        }
+        return appleSearchZoneXYList;
     }
+
+    /**
+     * Thread for the first apple escaping. Going to improve.
+     */
+    public void run() {
+        int position;
+        while (!isNeedSearchAppleZone) {
+            position = ((int) (Math.random() * 9));
+            switch (position) {
+                case 0:
+                    repaint();
+                    break;
+                case 1:
+                    firstAppleY -= 10;
+                    firstAppleX += 10;
+                    repaint();
+                    break;
+                case 2:
+                    firstAppleY += 10;
+                    firstAppleX += 10;
+                    repaint();
+                    break;
+                case 3:
+                    firstAppleY -= 10;
+                    firstAppleX += 10;
+                    repaint();
+                    break;
+                case 4:
+                    firstAppleY += 10;
+                    firstAppleX -= 10;
+                    repaint();
+                    break;
+                case 5:
+                    firstAppleY += 10;
+                    firstAppleX += 10;
+                    repaint();
+                    break;
+                case 6:
+                    firstAppleY += 10;
+                    firstAppleX -= 10;
+                    repaint();
+                    break;
+                case 7:
+                    firstAppleY -= 10;
+                    firstAppleX -= 10;
+                    repaint();
+                    break;
+                case 8:
+                    firstAppleY -= 10;
+                    firstAppleX -= 10;
+                    repaint();
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(null, "Unbelievable, but exception occured.");
+                    System.exit(0);
+            }
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+
+            }
+        }
+    }
+
 
     /**
      * Checking ate apple. If ate, create new, using the flag.
@@ -170,62 +237,6 @@ class Board extends JPanel implements ActionListener {
         }
     }
 
-    /**
-     * Escaping apple if snake nearby.
-     */
-
-    public void appleEscaping() {
-        int position = ((int) (Math.random() * 9));
-        switch (position) {
-            case 0:
-                repaint();
-                break;
-            case 1:
-                firstAppleY -= 10;
-                firstAppleX += 10;
-                repaint();
-                break;
-            case 2:
-                firstAppleY += 10;
-                firstAppleX += 10;
-                repaint();
-                break;
-            case 3:
-                firstAppleY -= 10;
-                firstAppleX += 10;
-                repaint();
-                break;
-            case 4:
-                firstAppleY += 10;
-                firstAppleX -= 10;
-                repaint();
-                break;
-            case 5:
-                firstAppleY += 10;
-                firstAppleX += 10;
-                repaint();
-                break;
-            case 6:
-                firstAppleY += 10;
-                firstAppleX -= 10;
-                repaint();
-                break;
-            case 7:
-                firstAppleY -= 10;
-                firstAppleX -= 10;
-                repaint();
-                break;
-            case 8:
-                firstAppleY -= 10;
-                firstAppleX -= 10;
-                repaint();
-                break;
-            default:
-                JOptionPane.showMessageDialog(null, "Unbelievable, but exception occured.");
-                System.exit(0);
-        }
-
-    }
 
     /**
      * gameOverShow method shows game ending.
@@ -281,8 +292,9 @@ class Board extends JPanel implements ActionListener {
         checkApple();
         repaint();
         if (!isNeedSearchAppleZone) {
-            appleEscaping();
-            checkApple();
+            // appleEscaping();
+
+            //    checkApple();
 
         }
     }
@@ -323,10 +335,11 @@ class Board extends JPanel implements ActionListener {
 
 }
 
+
 class MouseListener extends MouseAdapter {
     public void mouseClicked(MouseEvent event) {
-       // System.exit(0);
-      new Board();
+        // System.exit(0);
+        new Board();
     }
 }
 
