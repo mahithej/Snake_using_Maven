@@ -39,7 +39,7 @@ class Board extends JPanel implements ActionListener, Runnable {
     private Image body, appleImg;
     List<Object> appleSearchZoneXYList = new ArrayList<Object>();
     ControlPanel contrObjj = new ControlPanel();
-    Thread escapingThreadFirstApple;
+    Thread escapingThreadFirstApple, d;
 
     public Board() {
         addKeyListener(new ActionListener());
@@ -70,6 +70,18 @@ class Board extends JPanel implements ActionListener, Runnable {
         timer.start();
     }
 
+    /**
+     * Painting method.
+     *
+     * @param g graphics object.
+     */
+    public void paint(Graphics g) {
+        super.paint(g);
+        for (int z = 0; z < dots; z++) {
+            g.drawImage(body, x[z], y[z], this);
+        }
+        drawApple(g);
+    }
 
     /**
      * Method for 2 apples drawing.
@@ -95,64 +107,8 @@ class Board extends JPanel implements ActionListener, Runnable {
 
     }
 
-    /**
-     * Painting method.
-     *
-     * @param g graphics object.
-     */
-    public void paint(Graphics g) {
-        super.paint(g);
-        for (int z = 0; z < dots; z++) {
-            g.drawImage(body, x[z], y[z], this);
-        }
-        drawApple(g);
-    }
 
-    /**
-     * To get pair of X and Y coordinates as object.
-     *
-     * @param x
-     * @param y
-     * @return object consists of X and Y int values as coordinates
-     */
-    public Object getPairAsObj(int x, int y) {
 
-        ArrayList pair = new ArrayList();
-        pair.add(x);
-        pair.add(y);
-        return pair;
-
-    }
-
-    /**
-     * Checking for escaping apple. If snake is around apple, need to escaping apple.
-     * values 10 and 20 - is neighbor dots coordinates.
-     *
-     * @param appleX X coordinates for apple.
-     * @param appleY Y coordinates for apple.
-     * @return apppleSearchZoneXYList object for the UnitTest.
-     */
-    public Object checkSnakeIsNearByApple(int appleX, int appleY) {
-        int localX, localY;
-        int appleEscapingZone = 20;
-
-        if (isNeedSearchAppleZone) {
-
-            appleSearchZoneXYList.clear();
-            for (localX = appleX - appleEscapingZone; localX < appleX + appleEscapingZone; localX += dotsSize) {
-                for (localY = appleY - appleEscapingZone; localY < appleY + appleEscapingZone; localY += dotsSize) {
-                    appleSearchZoneXYList.add(getPairAsObj(localX, localY));
-                }
-            }
-
-            if (appleSearchZoneXYList.contains(getPairAsObj(x[0], y[0]))) {
-                isNeedSearchAppleZone = false;
-                escapingThreadFirstApple = new Thread(this);
-                escapingThreadFirstApple.start();
-            }
-        }
-        return appleSearchZoneXYList;
-    }
 
     /**
      * Thread for the first apple escaping. Going to improve.
@@ -161,6 +117,7 @@ class Board extends JPanel implements ActionListener, Runnable {
         int position;
         while (!isNeedSearchAppleZone) {
             position = ((int) (Math.random() * 9));
+
             switch (position) {
                 case 0:
                     repaint();
@@ -222,21 +179,68 @@ class Board extends JPanel implements ActionListener, Runnable {
      * Checking ate apple. If ate, create new, using the flag.
      */
     private void checkApple() {
-        checkSnakeIsNearByApple(firstAppleY, firstAppleX);
-        checkSnakeIsNearByApple(secondAppleX, secondAppleY);
 
-        if ((x[0] == firstAppleY) & (y[0] == firstAppleX)) {
-            dots++;
-            isNeedFirstAppleDraw = true;
-            isNeedSearchAppleZone = true;
+        if (isNeedSearchAppleZone) {
+            checkSnakeIsNearByApple(firstAppleY, firstAppleX);
+            checkSnakeIsNearByApple(secondAppleX, secondAppleY);
         }
-        if ((x[0] == secondAppleX) & (y[0] == secondAppleY)) {
-            dots++;
-            isNeedSecondAppleDraw = true;
-            isNeedSearchAppleZone = true;
+
+        if (!isNeedSearchAppleZone) {
+            if ((x[0] == firstAppleY) & (y[0] == firstAppleX)) {
+                dots++;
+                isNeedFirstAppleDraw = true;
+                isNeedSearchAppleZone = true;
+            }
+            if ((x[0] == secondAppleX) & (y[0] == secondAppleY)) {
+                dots++;
+                isNeedSecondAppleDraw = true;
+                isNeedSearchAppleZone = true;
+            }
         }
     }
 
+    /**
+     * Checking for escaping apple. If snake is around apple, need to escaping apple.
+     * values 10 and 20 - is neighbor dots coordinates.
+     *
+     * @param appleX X coordinates for apple.
+     * @param appleY Y coordinates for apple.
+     * @return apppleSearchZoneXYList object for the UnitTest.
+     */
+    public void checkSnakeIsNearByApple(int appleX, int appleY) {
+        int localX, localY;
+        int appleEscapingZone = 20;
+
+        appleSearchZoneXYList.clear();
+        for (localX = appleX - appleEscapingZone; localX < appleX + appleEscapingZone; localX += dotsSize) {
+            for (localY = appleY - appleEscapingZone; localY < appleY + appleEscapingZone; localY += dotsSize) {
+                appleSearchZoneXYList.add(getPairAsObj(localX, localY));
+            }
+        }
+
+        if (appleSearchZoneXYList.contains(getPairAsObj(x[0], y[0]))) {
+            isNeedSearchAppleZone = false;
+
+            escapingThreadFirstApple = new Thread(this);
+            escapingThreadFirstApple.start();
+        }
+    }
+
+    /**
+     * To get pair of X and Y coordinates as object.
+     *
+     * @param x
+     * @param y
+     * @return object consists of X and Y int values as coordinates
+     */
+    public Object getPairAsObj(int x, int y) {
+
+        ArrayList pair = new ArrayList();
+        pair.add(x);
+        pair.add(y);
+        return pair;
+
+    }
 
     /**
      * gameOverShow method shows game ending.
@@ -291,12 +295,6 @@ class Board extends JPanel implements ActionListener, Runnable {
         move();
         checkApple();
         repaint();
-        if (!isNeedSearchAppleZone) {
-            // appleEscaping();
-
-            //    checkApple();
-
-        }
     }
 
     private class ActionListener extends KeyAdapter {
