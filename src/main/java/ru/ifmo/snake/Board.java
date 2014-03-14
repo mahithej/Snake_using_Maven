@@ -108,73 +108,6 @@ class Board extends JPanel implements ActionListener, Runnable {
     }
 
 
-
-
-    /**
-     * Thread for the first apple escaping. Going to improve.
-     */
-    public void run() {
-        int position;
-        while (!isNeedSearchAppleZone) {
-            position = ((int) (Math.random() * 9));
-
-            switch (position) {
-                case 0:
-                    repaint();
-                    break;
-                case 1:
-                    firstAppleY -= 10;
-                    firstAppleX += 10;
-                    repaint();
-                    break;
-                case 2:
-                    firstAppleY += 10;
-                    firstAppleX += 10;
-                    repaint();
-                    break;
-                case 3:
-                    firstAppleY -= 10;
-                    firstAppleX += 10;
-                    repaint();
-                    break;
-                case 4:
-                    firstAppleY += 10;
-                    firstAppleX -= 10;
-                    repaint();
-                    break;
-                case 5:
-                    firstAppleY += 10;
-                    firstAppleX += 10;
-                    repaint();
-                    break;
-                case 6:
-                    firstAppleY += 10;
-                    firstAppleX -= 10;
-                    repaint();
-                    break;
-                case 7:
-                    firstAppleY -= 10;
-                    firstAppleX -= 10;
-                    repaint();
-                    break;
-                case 8:
-                    firstAppleY -= 10;
-                    firstAppleX -= 10;
-                    repaint();
-                    break;
-                default:
-                    JOptionPane.showMessageDialog(null, "Unbelievable, but exception occured.");
-                    System.exit(0);
-            }
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-
-            }
-        }
-    }
-
-
     /**
      * Checking ate apple. If ate, create new, using the flag.
      */
@@ -200,6 +133,22 @@ class Board extends JPanel implements ActionListener, Runnable {
     }
 
     /**
+     * To get pair of X and Y coordinates as object.
+     *
+     * @param x
+     * @param y
+     * @return object consists of X and Y int values as coordinates
+     */
+    public Object getPairAsObj(int x, int y) {
+
+        ArrayList pair = new ArrayList();
+        pair.add(x);
+        pair.add(y);
+        return pair;
+
+    }
+
+    /**
      * Checking for escaping apple. If snake is around apple, need to escaping apple.
      * values 10 and 20 - is neighbor dots coordinates.
      *
@@ -209,6 +158,7 @@ class Board extends JPanel implements ActionListener, Runnable {
      */
     public void checkSnakeIsNearByApple(int appleX, int appleY) {
         int localX, localY;
+
         int appleEscapingZone = 20;
 
         appleSearchZoneXYList.clear();
@@ -227,20 +177,24 @@ class Board extends JPanel implements ActionListener, Runnable {
     }
 
     /**
-     * To get pair of X and Y coordinates as object.
-     *
-     * @param x
-     * @param y
-     * @return object consists of X and Y int values as coordinates
+     * Thread for the first apple escaping. Going to improve.
      */
-    public Object getPairAsObj(int x, int y) {
+    public void run() {
+        int[] mas = new int[]{-10, 0, +10};
 
-        ArrayList pair = new ArrayList();
-        pair.add(x);
-        pair.add(y);
-        return pair;
+        while (!isNeedSearchAppleZone) {
 
+            firstAppleX += mas[(int) (Math.random() * 3)];
+            firstAppleY += mas[(int) (Math.random() * 3)];
+
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+
+            }
+        }
     }
+
 
     /**
      * gameOverShow method shows game ending.
@@ -295,6 +249,7 @@ class Board extends JPanel implements ActionListener, Runnable {
         move();
         checkApple();
         repaint();
+
     }
 
     private class ActionListener extends KeyAdapter {
