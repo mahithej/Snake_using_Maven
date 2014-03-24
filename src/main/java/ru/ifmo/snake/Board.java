@@ -8,12 +8,18 @@
  */
 package ru.ifmo.snake;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.swing.*;
-import javax.swing.Timer;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * I've no idea why CheckStyle indicates javadoc error on values description.
@@ -41,6 +47,8 @@ class Board extends JPanel implements ActionListener, Runnable {
     ControlPanel contrObjj = new ControlPanel();
     Thread escapingThreadFirstApple, d;
 
+    private static Logger logger = LoggerFactory.getLogger(Board.class);
+
     public Board() {
         addKeyListener(new ActionListener());
         ImageIcon dot = new ImageIcon(this.getClass().getResource("/dot.png"));
@@ -53,6 +61,7 @@ class Board extends JPanel implements ActionListener, Runnable {
         setBounds(50, 20, snakePanelsize, snakePanelsize);
         setLayout(null);
         contrObjj.setLabel();
+
     }
 
     /**
@@ -130,6 +139,7 @@ class Board extends JPanel implements ActionListener, Runnable {
                 isNeedSearchAppleZone = true;
             }
         }
+
     }
 
     /**
@@ -170,9 +180,9 @@ class Board extends JPanel implements ActionListener, Runnable {
 
         if (appleSearchZoneXYList.contains(getPairAsObj(x[0], y[0]))) {
             isNeedSearchAppleZone = false;
-
             escapingThreadFirstApple = new Thread(this);
             escapingThreadFirstApple.start();
+            logger.info("Thread {}",escapingThreadFirstApple);
         }
     }
 
@@ -282,6 +292,7 @@ class Board extends JPanel implements ActionListener, Runnable {
                 right = false;
                 left = false;
             }
+            logger.info("KeyPressed {}", e.getKeyText(e.getKeyCode()));
         }
 
     }
