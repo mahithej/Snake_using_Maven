@@ -43,7 +43,7 @@ class Board extends JPanel implements ActionListener, Runnable {
     private boolean up = false;
     private boolean down = false;
     private Image body, appleImg;
-    List<Object> appleSearchZoneXYList = new ArrayList<Object>();
+    List appleSearchZoneXYList = new ArrayList();
     ControlPanel contrObjj = new ControlPanel();
     Thread escapingThreadFirstApple, d;
 
@@ -149,14 +149,14 @@ class Board extends JPanel implements ActionListener, Runnable {
      * @param y
      * @return object consists of X and Y int values as coordinates
      */
-    public Object getPairAsObj(int x, int y) {
 
-        ArrayList pair = new ArrayList();
+    public ArrayList getPairAsObj(final int x, final int y) {
+        ArrayList<Integer> pair = new ArrayList<Integer>();
         pair.add(x);
         pair.add(y);
         return pair;
-
     }
+
 
     /**
      * Checking for escaping apple. If snake is around apple, need to escaping apple.
@@ -172,6 +172,7 @@ class Board extends JPanel implements ActionListener, Runnable {
         int appleEscapingZone = 20;
 
         appleSearchZoneXYList.clear();
+
         for (localX = appleX - appleEscapingZone; localX < appleX + appleEscapingZone; localX += dotsSize) {
             for (localY = appleY - appleEscapingZone; localY < appleY + appleEscapingZone; localY += dotsSize) {
                 appleSearchZoneXYList.add(getPairAsObj(localX, localY));
@@ -182,7 +183,7 @@ class Board extends JPanel implements ActionListener, Runnable {
             isNeedSearchAppleZone = false;
             escapingThreadFirstApple = new Thread(this);
             escapingThreadFirstApple.start();
-            logger.info("Thread {}",escapingThreadFirstApple);
+            logger.info("Thread {}", escapingThreadFirstApple);
         }
     }
 
