@@ -26,14 +26,14 @@ import java.util.List;
  * {@value } goos.
  */
 class Board extends JPanel implements ActionListener, Runnable {
-    private int snakePanelsize = 500;
-    private int dotsSize = 10;
+    private static final int SNAKE_PANELSIZE = 500;
+    private static final int DOTS_SIZE = 10;
     private int dots = 3;
     private boolean isNeedFirstAppleDraw = true;
     private boolean isNeedSecondAppleDraw = true;
     protected boolean isNeedSearchAppleZone = true;
-    protected int[] x = new int[snakePanelsize];
-    protected int[] y = new int[snakePanelsize];
+    protected int[] x = new int[SNAKE_PANELSIZE];
+    protected int[] y = new int[SNAKE_PANELSIZE];
     private int firstAppleY;
     private int firstAppleX;
     private int secondAppleX;
@@ -43,10 +43,9 @@ class Board extends JPanel implements ActionListener, Runnable {
     private boolean up = false;
     private boolean down = false;
     private Image body, appleImg;
-    List appleSearchZoneXYList = new ArrayList();
-    ControlPanel contrObjj = new ControlPanel();
-    Thread escapingThreadFirstApple, d;
-
+    private List appleSearchZoneXYList = new ArrayList();
+    private ControlPanel contrObjj = new ControlPanel();
+    private Thread escapingThreadFirstApple;
     private static Logger logger = LoggerFactory.getLogger(Board.class);
 
     public Board() {
@@ -58,7 +57,7 @@ class Board extends JPanel implements ActionListener, Runnable {
         initGame();
         setFocusable(true);
         setBackground(Color.LIGHT_GRAY);
-        setBounds(50, 20, snakePanelsize, snakePanelsize);
+        setBounds(50, 20, SNAKE_PANELSIZE, SNAKE_PANELSIZE);
         setLayout(null);
         contrObjj.setLabel();
 
@@ -71,12 +70,12 @@ class Board extends JPanel implements ActionListener, Runnable {
 
         for (int z = 0; z < dots; z++) {
             int startPosOfSnake = 50;
-            x[z] = startPosOfSnake - z * dotsSize;
+            x[z] = startPosOfSnake - z * DOTS_SIZE;
             y[z] = startPosOfSnake;
         }
-        int delay = 150;
+        final int delay = 150;
         Timer timer = new Timer(delay, this);
-        timer.start();
+        timer.start();                 
     }
 
     /**
@@ -100,16 +99,16 @@ class Board extends JPanel implements ActionListener, Runnable {
     public void drawApple(Graphics g) {
         if (isNeedSecondAppleDraw) {
             int limitVariable = 50;
-            secondAppleY = dotsSize * ((int) (Math.random() * limitVariable));
-            secondAppleX = dotsSize * ((int) (Math.random() * limitVariable));
+            secondAppleY = DOTS_SIZE * ((int) (Math.random() * limitVariable));
+            secondAppleX = DOTS_SIZE * ((int) (Math.random() * limitVariable));
             isNeedSecondAppleDraw = false;
         }
         g.drawImage(appleImg, firstAppleY, firstAppleX, this);
 
         if (isNeedFirstAppleDraw) {
             int limitVariable = 50;
-            firstAppleY = dotsSize * ((int) (Math.random() * limitVariable));
-            firstAppleX = dotsSize * ((int) (Math.random() * limitVariable));
+            firstAppleY = DOTS_SIZE * ((int) (Math.random() * limitVariable));
+            firstAppleX = DOTS_SIZE * ((int) (Math.random() * limitVariable));
             isNeedFirstAppleDraw = false;
         }
         g.drawImage(appleImg, secondAppleX, secondAppleY, this);
@@ -150,7 +149,7 @@ class Board extends JPanel implements ActionListener, Runnable {
      * @return object consists of X and Y int values as coordinates
      */
 
-    public ArrayList getPairAsObj(final int x, final int y) {
+    public ArrayList getPairAsObj(int x, int y) {
         ArrayList<Integer> pair = new ArrayList<Integer>();
         pair.add(x);
         pair.add(y);
@@ -173,8 +172,8 @@ class Board extends JPanel implements ActionListener, Runnable {
 
         appleSearchZoneXYList.clear();
 
-        for (localX = appleX - appleEscapingZone; localX < appleX + appleEscapingZone; localX += dotsSize) {
-            for (localY = appleY - appleEscapingZone; localY < appleY + appleEscapingZone; localY += dotsSize) {
+        for (localX = appleX - appleEscapingZone; localX < appleX + appleEscapingZone; localX += DOTS_SIZE) {
+            for (localY = appleY - appleEscapingZone; localY < appleY + appleEscapingZone; localY += DOTS_SIZE) {
                 appleSearchZoneXYList.add(getPairAsObj(localX, localY));
             }
         }
@@ -213,7 +212,7 @@ class Board extends JPanel implements ActionListener, Runnable {
     void gameOverShow() {
         setFocusable(true);
         setBackground(Color.BLACK);
-        setBounds(30, 20, snakePanelsize, snakePanelsize);
+        setBounds(30, 20, SNAKE_PANELSIZE, SNAKE_PANELSIZE);
         setLayout(null);
         System.exit(0);
     }
@@ -222,7 +221,7 @@ class Board extends JPanel implements ActionListener, Runnable {
      * Moving the snake in order of pressed button.
      */
     void move() {
-        if (x[0] == -10 | x[0] == snakePanelsize | y[0] == -10 | y[0] == snakePanelsize) {
+        if (x[0] == -10 | x[0] == SNAKE_PANELSIZE | y[0] == -10 | y[0] == SNAKE_PANELSIZE) {
             new Board().gameOverShow();
         }
 
@@ -237,17 +236,17 @@ class Board extends JPanel implements ActionListener, Runnable {
             y[z] = y[(z - 1)];
         }
         if (left) {
-            x[0] -= dotsSize;
+            x[0] -= DOTS_SIZE;
         }
         if (right) {
-            x[0] += dotsSize;
+            x[0] += DOTS_SIZE;
 
         }
         if (up) {
-            y[0] -= dotsSize;
+            y[0] -= DOTS_SIZE;
         }
         if (down) {
-            y[0] += dotsSize;
+            y[0] += DOTS_SIZE;
         }
     }
 
