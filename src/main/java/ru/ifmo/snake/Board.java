@@ -19,13 +19,16 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 
 /**
  * I've no idea why CheckStyle indicates javadoc error on values description.
  * {@value } goos.
  */
-class Board extends JPanel implements ActionListener, Runnable {
+class Board extends JPanel implements ActionListener {
     private static final int SNAKE_PANELSIZE = 500;
     private static final int DOTS_SIZE = 10;
     private int dots = 3;
@@ -45,7 +48,6 @@ class Board extends JPanel implements ActionListener, Runnable {
     private Image body, appleImg;
     private List appleSearchZoneXYList = new ArrayList();
     private ControlPanel contrObjj = new ControlPanel();
-    private Thread escapingThreadFirstApple;
     private static Logger logger = LoggerFactory.getLogger(Board.class);
 
     public Board() {
@@ -75,7 +77,7 @@ class Board extends JPanel implements ActionListener, Runnable {
         }
         final int delay = 150;
         Timer timer = new Timer(delay, this);
-        timer.start();                 
+        timer.start();
     }
 
     /**
@@ -144,8 +146,8 @@ class Board extends JPanel implements ActionListener, Runnable {
     /**
      * To get pair of X and Y coordinates as object.
      *
-     * @param x
-     * @param y
+     * @param x X coordinates
+     * @param y Y coordinates
      * @return object consists of X and Y int values as coordinates
      */
 
@@ -157,19 +159,21 @@ class Board extends JPanel implements ActionListener, Runnable {
     }
 
 
+
+    ExecutorService execc = Executors.newSingleThreadExecutor();
+
     /**
      * Checking for escaping apple. If snake is around apple, need to escaping apple.
      * values 10 and 20 - is neighbor dots coordinates.
      *
      * @param appleX X coordinates for apple.
      * @param appleY Y coordinates for apple.
-     * @return apppleSearchZoneXYList object for the UnitTest.
      */
+
+
     public void checkSnakeIsNearByApple(int appleX, int appleY) {
         int localX, localY;
-
         int appleEscapingZone = 20;
-
         appleSearchZoneXYList.clear();
 
         for (localX = appleX - appleEscapingZone; localX < appleX + appleEscapingZone; localX += DOTS_SIZE) {
@@ -180,31 +184,31 @@ class Board extends JPanel implements ActionListener, Runnable {
 
         if (appleSearchZoneXYList.contains(getPairAsObj(x[0], y[0]))) {
             isNeedSearchAppleZone = false;
-            escapingThreadFirstApple = new Thread(this);
-            escapingThreadFirstApple.start();
+            execc.execute(new EscapeThread());
             logger.info("Thread {}", escapingThreadFirstApple);
         }
     }
 
     /**
-     * Thread for the first apple escaping. Going to improve.
+     * Inner class for the apple escaping. It's run within the Executor static method named as "SingleThreadExecutor".
+     * In this way, it doesn't need to deal with synchronizing on the shared resource.
      */
-    public void run() {
-        int[] mas = new int[]{-10, 0, +10};
-
-        while (!isNeedSearchAppleZone) {
-
-            firstAppleX += mas[(int) (Math.random() * 3)];
-            firstAppleY += mas[(int) (Math.random() * 3)];
-
+    class EscapeThread implements Runnable {
+        // public EscapeThread() { }
+        @Override
+        public void run() {
+            int[] mas = new int[]{-10, 0, +10};
             try {
-                Thread.sleep(500);
+                while (!isNeedSearchAppleZone) {
+                    firstAppleX += mas[(int) (Math.random() * 3)];
+                    firstAppleY += mas[(int) (Math.random() * 3)];
+                    TimeUnit.MILLISECONDS.sleep(500);
+                }
             } catch (InterruptedException e) {
-
+                logger.info("Thread interrupted");
             }
         }
     }
-
 
     /**
      * gameOverShow method shows game ending.
